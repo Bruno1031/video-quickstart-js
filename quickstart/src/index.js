@@ -1,5 +1,14 @@
 'use strict';
-
+var firebase = require('firebase');
+var config = {
+  apiKey: "AIzaSyBkKjCGzmUNc2f6rc0NlHdrZ_uZ2syyBoo",
+  authDomain: "video-room-60128.firebaseapp.com",
+  databaseURL: "https://video-room-60128.firebaseio.com",
+  projectId: "video-room-60128",
+  storageBucket: "video-room-60128.appspot.com",
+  messagingSenderId: "1093652919372"
+};
+firebase.initializeApp(config);
 var Video = require('twilio-video');
 
 var activeRoom;
@@ -51,22 +60,36 @@ $.getJSON('/token', function(data) {
       alert('Please enter a room name.');
       return;
     }
-
-    log("Joining room '" + roomName + "'...");
-    var connectOptions = {
-      name: roomName,
-      logLevel: 'debug'
-    };
-
-    if (previewTracks) {
-      connectOptions.tracks = previewTracks;
+    var data = roomName.split(",");
+    if(data.length==2){
+      firebase.database().ref(data[0]).set({
+        Status: "Rining",
+        Room: data[1]
+      })
+      .then(() => {
+        alert("success");
+      })
+      .catch(error => alert(error))
+    }
+    else{
+      alert("INVALID INFOMATION")
     }
 
-    // Join the Room with the token from the server and the
-    // LocalParticipant's Tracks.
-    Video.connect(data.token, connectOptions).then(roomJoined, function(error) {
-      log('Could not connect to Twilio: ' + error.message);
-    });
+    // log("Joining room '" + roomName + "'...");
+    // var connectOptions = {
+    //   name: roomName,
+    //   logLevel: 'debug'
+    // };
+
+    // if (previewTracks) {
+    //   connectOptions.tracks = previewTracks;
+    // }
+
+    // // Join the Room with the token from the server and the
+    // // LocalParticipant's Tracks.
+    // Video.connect(data.token, connectOptions).then(roomJoined, function(error) {
+    //   log('Could not connect to Twilio: ' + error.message);
+    // });
   };
 
   // Bind button to leave Room.

@@ -67,7 +67,7 @@ $.getJSON('/token', function(data) {
         Room: data[1]
       })
       .then(() => {
-        var myRequest = new Request('http://whistle.lk/test/API/SimplePush.php?deviceid=d4cc7db7e50be9f010f30eb6c12ed6409e117c9b&message=mymessage&room='+data[1]);
+        var myRequest = new Request('http://whistle.lk/test/API/SimplePush.php?deviceid='+data[0]+'&message=mymessage&room='+data[1]);
         fetch(myRequest)
         .then(() => {
           alert("success");
